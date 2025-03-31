@@ -1,6 +1,6 @@
 import { auth } from "../firebase";
 
-const API_URL = "http://localhost:8000";
+const API_URL = import.meta.env.VITE_BASE_URL;
 
 export async function sendMessage(message: string, conversationId: string) {
   const token = await auth.currentUser?.getIdToken();
