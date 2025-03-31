@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { cn } from "@/lib/utils";
 import { Message } from "@/types";
 import { Bot, User } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";

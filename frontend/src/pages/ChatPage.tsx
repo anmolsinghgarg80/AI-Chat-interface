@@ -1,10 +1,10 @@
 import ChatSidebar from "../components/ChatSidebar";
 import ChatInput from "../components/ChatInput";
-import { Conversation, Message } from "@/types";
+import { Message } from "@/types";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useRef, useState } from "react";
-import { createConversation, getConversation, sendMessage } from "@/api/api";
+import { getConversation, sendMessage } from "@/api/api";
 import ChatMessage from "@/components/ChatMessage";
 import EmptyChat from "@/components/EmptyChat";
 
@@ -13,7 +13,7 @@ const Chat = () => {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
-  const [sendingMessage, setSendingMessage] = useState(false);
+  const setSendingMessage = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const Chat = () => {
     scrollToBottom();
 
     try {
-      setSendingMessage(true);
+      setSendingMessage[1](true);
       const response = await sendMessage(content, conversationId);
 
       const assistantMessage: Message = {
@@ -72,7 +72,7 @@ const Chat = () => {
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
-      setSendingMessage(false);
+      setSendingMessage[1](false);
       scrollToBottom();
     }
   };
