@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from app.controllers.chat_Controller import router as chat_router
 
+PORT = int(os.getenv("PORT", 8000)) 
+
 # Initialize FastAPI
 app = FastAPI(title="Chatting API")
 
@@ -24,4 +26,4 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port = os.getenv("PORT","8000"))
+    uvicorn.run(app, host="0.0.0.0", port = PORT)
