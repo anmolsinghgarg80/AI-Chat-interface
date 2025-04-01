@@ -5,6 +5,7 @@ import os
 from fastapi.staticfiles import StaticFiles
 from app.controllers.chat_Controller import router as chat_router
 
+PORT = 8080
 
 # Initialize FastAPI
 app = FastAPI(title="Chatting API")
@@ -20,7 +21,7 @@ app.add_middleware(
 
 app.mount(
     "/",  
-    StaticFiles(directory="../../frontend/dist", html=True),
+    StaticFiles(directory="../frontend/dist", html=True),
     name="frontend"
 )
 
@@ -33,5 +34,4 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    PORT = 8080
     uvicorn.run(app,port=PORT)
