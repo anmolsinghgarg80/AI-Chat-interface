@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { Send } from "lucide-react";
 
 interface chatInputProps {
   onSendMessage: (message: string) => void;
@@ -12,24 +13,24 @@ const ChatInput = ({ onSendMessage }: chatInputProps) => {
   const handlesubmit = (e: FormEvent) => {
     e.preventDefault();
     onSendMessage(message);
-
     setMessage("");
   };
 
   return (
-    <div className="flex flex-row items-center gap-5">
+    <div className="flex flex-row items-center gap-3">
       <Input
-        placeholder="Type your Message here"
+        placeholder="Type your message here..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="bg-gray-50 border-gray-300 text-gray-800 focus:border-gray-400 focus:ring-gray-400"
+        className="bg-indigo-50 border-indigo-100 text-slate-800 focus:border-indigo-300 focus:ring-indigo-200 placeholder-slate-400 rounded-xl shadow-sm transition-all"
       />
       <Button
         type="submit"
         onClick={handlesubmit}
-        className=" bg-gray-800 hover:bg-gray-700 text-white"
+        className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2 rounded-xl shadow-sm transition-all"
       >
-        Send
+        <span>Send</span>
+        <Send className="h-4 w-4" />
       </Button>
     </div>
   );

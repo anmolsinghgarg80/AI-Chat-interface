@@ -1,5 +1,5 @@
-import ChatSidebar from "../components/ChatSidebar";
-import ChatInput from "../components/ChatInput";
+import ChatSidebar from "@/components/ChatSidebar";
+import ChatInput from "@/components/ChatInput";
 import { Message } from "@/types";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,7 +14,7 @@ const Chat = () => {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
-  const setSendingMessage = useState(false);
+  const [isSendingMessage, setSendingMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,7 +32,6 @@ const Chat = () => {
     try {
       setLoading(true);
       const data = await getConversation(conversationId);
-      console.log(data);
       setMessages(data.messages || []);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -44,7 +43,7 @@ const Chat = () => {
 
   const handleSendMessage = async (content: string) => {
     if (!conversationId || !content.trim()) {
-      alert("Create a new conversation in sidebar to start charting");
+      alert("Create a new conversation in sidebar to start chatting");
       return;
     }
 
@@ -59,7 +58,7 @@ const Chat = () => {
     scrollToBottom();
 
     try {
-      setSendingMessage[1](true);
+      setSendingMessage(true);
       const response = await sendMessage(content, conversationId);
 
       const assistantMessage: Message = {
@@ -73,7 +72,7 @@ const Chat = () => {
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
-      setSendingMessage[1](false);
+      setSendingMessage(false);
       scrollToBottom();
     }
   };
@@ -85,23 +84,24 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-slate-50">
       <ChatSidebar currentConversationId={conversationId || null} />
-      <main className="flex-1 ml-0 md:ml-72 flex flex-col h-full bg-white">
-        <div className="flex flex-col justify-center items-center bg-gray-200 font-bold text-xl p-3 text-gray-800">
-          <div>Welcome</div> <div>{user?.email}</div>
+      <main className="flex-1 ml-0 md:ml-72 flex flex-col h-full bg-slate-50">
+        <div className="flex flex-col md:flex-row md:gap-3 justify-center items-center bg-white font-bold text-lg p-3 text-slate-800 border-b border-indigo-100 shadow-sm">
+          <div>Welcome</div>
+          <div className="text-indigo-600">{user?.email}</div>
         </div>
         <div className="flex-1 overflow-y-auto scrollbar-thin px-2 pt-2 pb-40">
           {loading ? (
             <div className="flex items-center justify-center h-full">
-              <div className="animate-pulse text-gray-500">
-                Loading conversation...
+              <div className="animate-pulse text-indigo-500 flex items-center gap-2">
+                Loading conversation ...
               </div>
             </div>
           ) : !conversationId ? (
             <div className="flex items-center justify-center h-full">
-              <div className="text-gray-500 flex items-center flex-col">
-                <MessageSquare className="h-10 w-10 text-gray-500" />
+              <div className="text-indigo-600 flex items-center flex-col gap-3 bg-white p-6 rounded-xl shadow-sm">
+                <MessageSquare className="h-10 w-10 text-indigo-500" />
                 Add a new conversation in sidebar to continue
               </div>
             </div>
@@ -117,13 +117,18 @@ const Chat = () => {
                     isLatest={index === messages.length - 1}
                   />
                 ))}
+                {isSendingMessage && (
+                  <div className="text-xs text-indigo-500 mt-1 ml-2 flex items-center gap-1">
+                    Waiting for response ...
+                  </div>
+                )}
               </div>
               <div ref={messagesEndRef} />
             </>
           )}
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm py-4 px-4 md:pl-80 border-t border-gray-200">
+        <div className="absolute bottom-0 left-0 right-0 bg-white py-4 px-4 md:pl-80 border-t border-indigo-100 shadow-md">
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </main>

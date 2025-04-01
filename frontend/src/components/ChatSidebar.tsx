@@ -69,7 +69,7 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
         <Button
           variant="outline"
           size="icon"
-          className="fixed top-4 left-4 z-50 bg-white border-gray-300 text-gray-800"
+          className="fixed top-4 left-4 z-50 bg-white border-indigo-200 text-indigo-600 hover:bg-indigo-50 shadow-sm rounded-lg"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
           {sidebarOpen ? (
@@ -82,34 +82,34 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
 
       <div
         className={cn(
-          "bg-gray-200 h-full fixed left-0 top-0 bottom-0 z-40 w-72 border-r border-gray-300 transition-transform duration-300 flex flex-col",
+          "bg-white h-full fixed left-0 top-0 bottom-0 z-40 w-72 border-r border-indigo-100 transition-transform duration-300 flex flex-col shadow-sm",
           isMobile && !sidebarOpen && "-translate-x-full"
         )}
       >
         <div className="p-4 flex-1 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 px-2">
             <div className="flex items-center space-x-2">
-              <MessageSquare className="h-6 w-6 text-gray-800" />
-              <h1 className="ml-5 font-bold text-xl text-gray-800">Chatting App</h1>
+              <div className="bg-indigo-100 p-2 rounded-lg">
+                <MessageSquare className="h-3 w-3 text-indigo-600" />
+              </div>
+              <h1 className="font-bold text-xl text-slate-800">Chatting App</h1>
             </div>
           </div>
 
           <Button
-            className="w-full mb-4 flex items-center gap-2 bg-gray-800 hover:bg-gray-700 rounded-xl cursor-pointer text-white"
+            className="w-full mb-5 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 rounded-xl cursor-pointer text-white shadow-sm transition-all"
             onClick={handleCreateConversation}
             disabled={loading}
           >
             <Plus className="h-4 w-4 text-white" />
-            <h3 className="text-white">New Chat</h3>
+            <h3 className="text-white font-medium">New Chat</h3>
           </Button>
 
           <div className="space-y-1 flex-1 overflow-y-auto scrollbar-thin">
             {loading && conversations.length === 0 ? (
-              <div className="text-center py-4 text-gray-500">
-                Loading...
-              </div>
+              <div className="text-center py-4 text-indigo-500">Loading...</div>
             ) : conversations.length === 0 ? (
-              <div className="text-center py-4 text-gray-500">
+              <div className="text-center py-4 text-indigo-500">
                 No conversations yet
               </div>
             ) : (
@@ -121,20 +121,20 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
                     if (isMobile) setSidebarOpen(false);
                   }}
                   className={cn(
-                    "w-full text-left px-3 py-2 rounded-lg transition-colors flex items-center gap-2 overflow-hidden text-gray-800",
+                    "w-full text-left px-3 py-2 rounded-lg transition-all flex items-center gap-2 overflow-hidden text-slate-700",
                     conversation.id === currentConversationId
-                      ? "bg-gray-300"
-                      : "hover:bg-gray-100"
+                      ? "bg-indigo-100 text-indigo-900 font-medium"
+                      : "hover:bg-indigo-50"
                   )}
                 >
-                  <MessageSquare className="h-4 w-4 shrink-0" />
+                  <MessageSquare className="h-4 w-4 shrink-0 text-indigo-600" />
                   <span className="truncate">{conversation.title}</span>
                 </button>
               ))
             )}
           </div>
 
-          <div className="mt-auto pt-4 border-t border-gray-300">
+          <div className="mt-auto pt-4 border-t border-indigo-100">
             {user && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center overflow-hidden">
@@ -142,11 +142,11 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
                     <img
                       src={user.photoURL}
                       alt={user.displayName || "User"}
-                      className="w-8 h-8 rounded-full mr-2"
+                      className="w-8 h-8 rounded-full mr-2 ring-2 ring-indigo-100"
                     />
                   )}
                   <div className="truncate">
-                    <p className="text-sm truncate font-medium text-gray-800">
+                    <p className="text-sm truncate font-medium text-slate-800">
                       {user.displayName || user.email || "User"}
                     </p>
                   </div>
@@ -156,7 +156,7 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
                   size="icon"
                   onClick={logout}
                   title="Sign out"
-                  className="bg-gray-300 hover:bg-gray-400 cursor-pointer text-gray-800"
+                  className="bg-indigo-100 hover:bg-indigo-200 cursor-pointer text-indigo-600 rounded-lg"
                 >
                   <LogOut className="h-4 w-4" />
                 </Button>
@@ -168,7 +168,7 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
 
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/20"
+          className="fixed backdrop-blur-sm inset-0 z-30"
           onClick={() => setSidebarOpen(false)}
         />
       )}

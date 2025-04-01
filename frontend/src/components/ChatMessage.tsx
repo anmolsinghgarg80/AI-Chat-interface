@@ -22,7 +22,14 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 
   const renderContent = () => {
     if (!message.content) return null;
-
+  
+    // Process markdown-like bold and italic formatting
+    const formatText = (text:string )=> {
+      return text
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+        .replace(/\*(.*?)\*/g, "<em>$1</em>"); // Italic
+    };
+  
     if (message.content.includes("```")) {
       const parts = message.content.split(/(```[\s\S]*?```)/g);
       return (
@@ -33,31 +40,30 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
               return (
                 <div
                   key={index}
-                  className="my-2 overflow-auto rounded-md bg-gray-100 p-2 font-mono text-sm text-gray-800"
+                  className="my-2 overflow-auto rounded-lg bg-slate-100 p-3 font-mono text-sm text-slate-800 shadow-inner"
                 >
                   <pre>{codeContent}</pre>
                 </div>
               );
             }
             return (
-              <p key={index} className="whitespace-pre-wrap">
-                {part}
-              </p>
+              <p key={index} className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: formatText(part) }} />
             );
           })}
         </div>
       );
     }
-
-    return <div className="whitespace-pre-wrap">{message.content}</div>;
+  
+    return <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: formatText(message.content) }} />;
   };
+  
 
   return (
     <div
       key={message.id}
-      className={`flex w-full items-start gap-4 px-4 py-6 ${isAssistant ? 'bg-gray-100' : 'bg-white'}`}
+      className={`flex w-full items-start gap-4 px-4 py-5 ${isAssistant ? 'bg-indigo-50/50' : 'bg-white'} transition-colors`}
     >
-      <Avatar className={`h-8 w-8 ${isAssistant ? "bg-gray-600" : "bg-gray-800"}`}>
+      <Avatar className={`h-8 w-8 shadow-sm ring-2 ring-white ${isAssistant ? "bg-indigo-600" : "bg-slate-700"}`}>
         <AvatarFallback className="text-xs text-white">
           {isAssistant ? <Bot size={16} /> : <User size={16} />}
         </AvatarFallback>
@@ -69,14 +75,14 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 
       <div className="flex-1 space-y-2">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-sm text-gray-800">
+          <h3 className="font-semibold text-sm text-slate-800">
             {isAssistant ? "Assistant" : "You"}
           </h3>
-          <span className="text-xs text-gray-500">{timestamp}</span>
+          <span className="text-xs text-indigo-500 font-medium">{timestamp}</span>
         </div>
 
-        <Card className="bg-white border-gray-200 shadow-sm">
-          <CardContent className="p-3 text-sm text-gray-800">{renderContent()}</CardContent>
+        <Card className={`border-0 ${isAssistant ? 'bg-white' : 'bg-indigo-50/50'} shadow-sm transition-all hover:shadow`}>
+          <CardContent className="p-4 text-sm text-slate-700">{renderContent()}</CardContent>
         </Card>
       </div>
     </div>
