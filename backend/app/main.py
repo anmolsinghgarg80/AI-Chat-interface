@@ -20,17 +20,14 @@ app.add_middleware(
 
 # Get correct paths using pathlib
 current_file = Path(__file__)  # This is /backend/app/main.py
-backend_dir = current_file.parent.parent  # This is /backend/
+backend_dir = current_file.parent  # This is /backend/
 frontend_dist_dir = backend_dir.parent / "frontend" / "dist"  # This is /frontend/dist/
 
 print(f"Frontend dist directory: {frontend_dist_dir}")
 
-# Check if the frontend dist directory exists
 if not frontend_dist_dir.exists():
     print(f"Warning: Frontend dist directory not found at {frontend_dist_dir}")
 
-# Check the actual structure of your frontend build
-# Vite typically puts assets in an "assets" folder
 assets_dir = frontend_dist_dir / "assets"
 if assets_dir.exists():
     print(f"Mounting assets directory from {assets_dir}")
@@ -56,11 +53,11 @@ else:
 # API Routes (should come before catch-all)
 app.include_router(chat_router, prefix="/api")
 
-@app.get("/api/health")
+@app.get("/")
 async def health_check():
     return {"status": "healthy"}
 
-# Catch-all route for SPA (must be last)
+
 @app.get("/{full_path:path}")
 async def serve_spa(request: Request, full_path: str):
     # Don't interfere with API routes
