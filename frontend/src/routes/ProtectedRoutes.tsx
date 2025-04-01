@@ -6,7 +6,8 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user, loading } = useAuth();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const { loading } = useAuth();
 
   if (loading) {
     return (

@@ -2,7 +2,6 @@ import ChatSidebar from "@/components/ChatSidebar";
 import ChatInput from "@/components/ChatInput";
 import { Message } from "@/types";
 import { useParams } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { getConversation, sendMessage } from "@/api/api";
 import ChatMessage from "@/components/ChatMessage";
@@ -11,11 +10,19 @@ import { MessageSquare } from "lucide-react";
 
 const Chat = () => {
   const { conversationId } = useParams<{ conversationId: string }>();
-  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [isSendingMessage, setSendingMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const [user] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "{}");
+    } catch (error) {
+      console.error("Error parsing user from localStorage:", error);
+      return {};
+    }
+  });
 
   useEffect(() => {
     if (!user) return;
@@ -24,7 +31,7 @@ const Chat = () => {
       return;
     }
     fetchMessages();
-  }, [conversationId, user]);
+  }, [conversationId]);
 
   const fetchMessages = async () => {
     if (!conversationId) return;
@@ -42,8 +49,12 @@ const Chat = () => {
   };
 
   const handleSendMessage = async (content: string) => {
-    if (!conversationId || !content.trim()) {
+    if (!conversationId) {
       alert("Create a new conversation in sidebar to start chatting");
+      return;
+    }
+    if (!content.trim()) {
+      alert("Input Must not be empty");
       return;
     }
 

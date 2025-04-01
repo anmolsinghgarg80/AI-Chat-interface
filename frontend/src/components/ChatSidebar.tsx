@@ -17,7 +17,8 @@ interface ChatSidebarProps {
 }
 
 const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -33,10 +34,10 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user?.uid) {
       fetchConversations();
     }
-  }, [user]);
+  }, []);
 
   const fetchConversations = async () => {
     try {

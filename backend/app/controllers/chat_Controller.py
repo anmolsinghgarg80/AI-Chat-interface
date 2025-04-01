@@ -48,13 +48,9 @@ class Conversation(BaseModel):
 async def get_current_user(authorization: str = Header(None)):
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Not authenticated")
-    
     token = authorization.split("Bearer ")[1]
-
     try:
-
         decoded_token = auth.verify_id_token(token)
-        
         return decoded_token
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
@@ -167,7 +163,6 @@ async def chat(message: Message, user=Depends(get_current_user)):
 async def get_conversations(user=Depends(get_current_user)):
     user_id = user["uid"]
     # Get all conversations for the user
-
     conversations_ref = db.collection("conversations").where("user_id", "==", user_id).stream()
     conversations = []
     for conversation in conversations_ref:
