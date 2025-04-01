@@ -163,7 +163,7 @@ async def chat(message: Message, user=Depends(get_current_user)):
 async def get_conversations(user=Depends(get_current_user)):
     user_id = user["uid"]
     # Get all conversations for the user
-    conversations_ref = db.collection("conversations").where("user_id", "==", user_id).stream()
+    conversations_ref = db.collection("conversations").where("user_id", "==", user_id).stream() 
     conversations = []
     for conversation in conversations_ref:
         data = conversation.to_dict()

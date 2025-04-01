@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
+
+from fastapi.staticfiles import StaticFiles
 from app.controllers.chat_Controller import router as chat_router
 
-PORT = int(os.getenv("PORT", 8000)) 
 
 # Initialize FastAPI
 app = FastAPI(title="Chatting API")
@@ -17,6 +18,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount(
+    "/",  
+    StaticFiles(directory="../../frontend/dist", html=True),
+    name="frontend"
+)
+
 # Routes
 app.include_router(chat_router,prefix="/api")
 
@@ -26,4 +33,5 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port = PORT)
+    PORT = 8080
+    uvicorn.run(app,port=PORT)
