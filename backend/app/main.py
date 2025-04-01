@@ -11,7 +11,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173","https://ai-chat-interface.onrender.com"],  
     allow_credentials=True,
-    allow_methods=["GET","POST"],
+    allow_methods=["GET","POST","OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -24,4 +24,4 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port = os.getenv("PORT","8000"))
+    uvicorn.run(app, host="0.0.0.0", port = os.getenv("PORT","8000"))
