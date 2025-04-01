@@ -19,11 +19,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount(
-    "/",  
-    StaticFiles(directory="../frontend/dist", html=True),
-    name="frontend"
-)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.dirname(current_dir)
+# Construct the path to frontend/dist
+frontend_dist_dir = os.path.join(backend_dir, "..", "frontend", "dist")
+
+# Check if directory exists, otherwise use a fallback
+if os.path.exists(frontend_dist_dir):
+    app.mount(
+        "/",  
+        StaticFiles(directory=frontend_dist_dir, html=True),
+        name="frontend"
+    )
 
 # Routes
 app.include_router(chat_router,prefix="/api")
