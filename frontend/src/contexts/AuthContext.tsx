@@ -9,7 +9,6 @@ import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { auth, db, googleProvider } from "@/firebase";
 
-
 interface AuthContextType {
   user: any;
   loading: boolean;
@@ -18,7 +17,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }
-
+// creating the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({

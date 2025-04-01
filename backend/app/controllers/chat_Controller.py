@@ -1,16 +1,13 @@
-from fastapi import FastAPI, HTTPException, Depends, Header, Request
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import HTTPException, Depends, APIRouter, Header
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
-import os
-import uuid
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
-import google.generativeai as genai
 from datetime import datetime
-import json
-from dotenv import load_dotenv
+import os
+import uuid
+import google.generativeai as genai
 
+from dotenv import load_dotenv
 load_dotenv()
 
 service_account_info = {
@@ -34,21 +31,10 @@ firebase_admin.initialize_app(cred)
 # Get Firestore Database instance
 db = firestore.client()
 
+
 # Initialize Gemini API
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
-
-# Initialize FastAPI
-app = FastAPI(title="Chatopia API")
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with your frontend URL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 class Message(BaseModel):
     content: str
@@ -56,6 +42,7 @@ class Message(BaseModel):
 
 class Conversation(BaseModel):
     title: str
+
 
 # Auth middleware
 async def get_current_user(authorization: str = Header(None)):
@@ -81,8 +68,8 @@ def get_gemini_response(prompt, conversation_history=None):
         response = chat.send_message(prompt)
     else:
         response = model.generate_content(prompt)
-    print(response.text)
     return response.text
+
 
 # Format conversation history for Gemini
 def format_conversation_history(messages):
@@ -94,8 +81,9 @@ def format_conversation_history(messages):
         })
     return history
 
-# Routes
-@app.post("/api/chat")
+router = APIRouter()
+
+@router.post("/chat")
 async def chat(message: Message, user=Depends(get_current_user)):
     user_id = user["uid"]
     conversation_id = message.conversation_id
@@ -122,15 +110,15 @@ async def chat(message: Message, user=Depends(get_current_user)):
     messages_ref = conversation_ref.collection("messages").order_by("created_at").stream()
     messages = [msg.to_dict() for msg in messages_ref]
     
-    # if the first message is sent then the name of the title should be changed to the question asked, make changes below
+    # if the first message is sent then the name of the title should be changed to the question asked
     if not messages:
         conversation_ref.update({
             "title": message.content[:30] + "..." if len(message.content) > 30 else message.content,
         })   
 
-    # Add user message to database
-# Add user message to database (CORRECTED)
+    # Add user message to database 
     user_message_id = str(uuid.uuid4())
+
     conversation_ref.collection("messages").document(user_message_id).set({
         "id": user_message_id,
         "content": message.content,
@@ -167,21 +155,6 @@ async def chat(message: Message, user=Depends(get_current_user)):
             "updated_at": datetime.now().isoformat()
         })
         
-        # If this is a new conversation and we haven't set a good title yet
-        if conversation.exists and conversation.to_dict()["title"] == (message.content[:30] + "..." if len(message.content) > 30 else message.content):
-            # Generate a better title using Gemini
-            title_prompt = f"Generate a short, concise title (maximum 5 words) for this conversation. The first message is: {message.content}"
-            title = get_gemini_response(title_prompt)
-            
-            # Clean up and trim the title
-            title = title.strip().strip('"').strip("'")
-            if len(title) > 30:
-                title = title[:27] + "..."
-                
-            conversation_ref.update({
-                "title": title
-            })
-        
         return {
             "message_id": ai_message_id,
             "content": ai_response,
@@ -190,11 +163,11 @@ async def chat(message: Message, user=Depends(get_current_user)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}")
 
-@app.get("/api/conversations")
+@router.get("/conversations")
 async def get_conversations(user=Depends(get_current_user)):
     user_id = user["uid"]
-    print("working")
     # Get all conversations for the user
+
     conversations_ref = db.collection("conversations").where("user_id", "==", user_id).stream()
     conversations = []
     for conversation in conversations_ref:
@@ -205,9 +178,10 @@ async def get_conversations(user=Depends(get_current_user)):
             "createdAt": data.get("created_at"),
             "updatedAt": data.get("updated_at")
         })
+
     return {"conversations": conversations}
 
-@app.get("/api/conversations/{conversation_id}")
+@router.get("/conversations/{conversation_id}")
 async def get_conversation(conversation_id: str, user=Depends(get_current_user)):
     user_id = user["uid"]
     
@@ -234,12 +208,12 @@ async def get_conversation(conversation_id: str, user=Depends(get_current_user))
     conversation_data = conversation.to_dict()
     return {
         "id": conversation_id,
-        "title": conversation_data.get("title", "Untitled Conversation"),
+        "title": conversation_data.get("title"),
         "createdAt": conversation_data.get("created_at"),
         "messages": messages
     }
 
-@app.post("/api/conversations")
+@router.post("/conversations")
 async def create_conversation(conversation: Conversation, user=Depends(get_current_user)):
     user_id = user["uid"]
     
@@ -256,15 +230,7 @@ async def create_conversation(conversation: Conversation, user=Depends(get_curre
         "conversation": {
             "id": conversation_id,
             "title": conversation.title,
-            "createdAt": datetime.now().isoformat()
+            "createdAt": datetime.now().isoformat(),
+            "updatedAt":datetime.now().isoformat()
         }
     }
-
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to Chatopia API"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)

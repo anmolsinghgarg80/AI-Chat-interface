@@ -9,9 +9,8 @@ export async function sendMessage(message: string, conversationId: string) {
     throw new Error("Not authenticated");
   }
 
-  // Log what we're sending to help debug
   console.log("Sending to API:", {
-    content: message, // Use 'content' to match backend expectation
+    content: message, 
     conversation_id: conversationId,
   });
 
@@ -38,7 +37,6 @@ export async function sendMessage(message: string, conversationId: string) {
 
 export async function getConversations() {
   const token = await auth.currentUser?.getIdToken();
-  console.log(token);
   if (!token) {
     throw new Error("Not authenticated");
   }
@@ -101,23 +99,3 @@ export async function createConversation(title: string) {
   return response.json();
 }
 
-export async function changeTite(title: string) {
-  const token = auth.currentUser?.getIdToken;
-
-  if (!token) {
-    throw new Error("Not authenticated");
-  }
-  const response = await fetch(`${API_URL}/api/changeTitle`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ title }),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to create conversation");
-  }
-  return response.json();
-}

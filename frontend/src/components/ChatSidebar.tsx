@@ -69,37 +69,49 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
         <Button
           variant="outline"
           size="icon"
-          className="fixed top-4 left-4 z-50"
+          className="fixed top-4 left-4 z-50 bg-white border-gray-300 text-gray-800"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
-          {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {sidebarOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
         </Button>
       )}
 
       <div
         className={cn(
-          "bg-card h-full fixed left-0 top-0 bottom-0 z-40 w-72 border-r transition-transform duration-300 flex flex-col",
+          "bg-gray-200 h-full fixed left-0 top-0 bottom-0 z-40 w-72 border-r border-gray-300 transition-transform duration-300 flex flex-col",
           isMobile && !sidebarOpen && "-translate-x-full"
         )}
       >
         <div className="p-4 flex-1 flex flex-col h-full">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-2">
-              <MessageSquare className="h-6 w-6 text-primary" />
-              <h1 className="font-bold text-xl">Chatopia</h1>
+              <MessageSquare className="h-6 w-6 text-gray-800" />
+              <h1 className="ml-5 font-bold text-xl text-gray-800">Chatting App</h1>
             </div>
           </div>
 
-          <Button className="w-full mb-4 flex items-center gap-2" onClick={handleCreateConversation} disabled={loading}>
-            <Plus className="h-4 w-4" />
-            New Chat
+          <Button
+            className="w-full mb-4 flex items-center gap-2 bg-gray-800 hover:bg-gray-700 rounded-xl cursor-pointer text-white"
+            onClick={handleCreateConversation}
+            disabled={loading}
+          >
+            <Plus className="h-4 w-4 text-white" />
+            <h3 className="text-white">New Chat</h3>
           </Button>
 
           <div className="space-y-1 flex-1 overflow-y-auto scrollbar-thin">
             {loading && conversations.length === 0 ? (
-              <div className="text-center py-4 text-muted-foreground">Loading...</div>
+              <div className="text-center py-4 text-gray-500">
+                Loading...
+              </div>
             ) : conversations.length === 0 ? (
-              <div className="text-center py-4 text-muted-foreground">No conversations yet</div>
+              <div className="text-center py-4 text-gray-500">
+                No conversations yet
+              </div>
             ) : (
               conversations.map((conversation) => (
                 <button
@@ -109,10 +121,10 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
                     if (isMobile) setSidebarOpen(false);
                   }}
                   className={cn(
-                    "w-full text-left px-3 py-2 rounded-lg transition-colors flex items-center gap-2 overflow-hidden",
+                    "w-full text-left px-3 py-2 rounded-lg transition-colors flex items-center gap-2 overflow-hidden text-gray-800",
                     conversation.id === currentConversationId
-                      ? "bg-secondary text-secondary-foreground"
-                      : "hover:bg-secondary/50 text-muted-foreground"
+                      ? "bg-gray-300"
+                      : "hover:bg-gray-100"
                   )}
                 >
                   <MessageSquare className="h-4 w-4 shrink-0" />
@@ -122,7 +134,7 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
             )}
           </div>
 
-          <div className="mt-auto pt-4 border-t">
+          <div className="mt-auto pt-4 border-t border-gray-300">
             {user && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center overflow-hidden">
@@ -134,12 +146,18 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
                     />
                   )}
                   <div className="truncate">
-                    <p className="text-sm truncate font-medium">
+                    <p className="text-sm truncate font-medium text-gray-800">
                       {user.displayName || user.email || "User"}
                     </p>
                   </div>
                 </div>
-                <Button variant="ghost" size="icon" onClick={logout} title="Sign out">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={logout}
+                  title="Sign out"
+                  className="bg-gray-300 hover:bg-gray-400 cursor-pointer text-gray-800"
+                >
                   <LogOut className="h-4 w-4" />
                 </Button>
               </div>
@@ -149,7 +167,10 @@ const ChatSidebar = ({ currentConversationId }: ChatSidebarProps) => {
       </div>
 
       {isMobile && sidebarOpen && (
-        <div className="fixed inset-0 z-30 bg-background/80 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+        <div
+          className="fixed inset-0 z-30 bg-black/20"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
     </>
   );

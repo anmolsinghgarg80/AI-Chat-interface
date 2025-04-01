@@ -20,11 +20,9 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 
   const timestamp = message.createdAt ? formatTime(message.createdAt) : "";
 
-  // Basic code block rendering
   const renderContent = () => {
     if (!message.content) return null;
 
-    // Simple code block detection
     if (message.content.includes("```")) {
       const parts = message.content.split(/(```[\s\S]*?```)/g);
       return (
@@ -35,7 +33,7 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
               return (
                 <div
                   key={index}
-                  className="my-2 overflow-auto rounded-md bg-black/10 p-2 font-mono text-sm"
+                  className="my-2 overflow-auto rounded-md bg-gray-100 p-2 font-mono text-sm text-gray-800"
                 >
                   <pre>{codeContent}</pre>
                 </div>
@@ -57,10 +55,10 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
   return (
     <div
       key={message.id}
-      className="flex w-full items-start gap-4 px-4 py-6 bg-slate-100"
+      className={`flex w-full items-start gap-4 px-4 py-6 ${isAssistant ? 'bg-gray-100' : 'bg-white'}`}
     >
-      <Avatar className="h-8 w-8 bg-slate-500">
-        <AvatarFallback className="text-xs">
+      <Avatar className={`h-8 w-8 ${isAssistant ? "bg-gray-600" : "bg-gray-800"}`}>
+        <AvatarFallback className="text-xs text-white">
           {isAssistant ? <Bot size={16} /> : <User size={16} />}
         </AvatarFallback>
         {isAssistant && (
@@ -71,14 +69,14 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 
       <div className="flex-1 space-y-2">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-sm">
+          <h3 className="font-semibold text-sm text-gray-800">
             {isAssistant ? "Assistant" : "You"}
           </h3>
-          <span className="text-xs text-muted-foreground">{timestamp}</span>
+          <span className="text-xs text-gray-500">{timestamp}</span>
         </div>
 
-        <Card>
-          <CardContent className="p-3 text-sm">{renderContent()}</CardContent>
+        <Card className="bg-white border-gray-200 shadow-sm">
+          <CardContent className="p-3 text-sm text-gray-800">{renderContent()}</CardContent>
         </Card>
       </div>
     </div>
