@@ -28,6 +28,13 @@ This application consists of:
 - Firebase account
 - Google Cloud account with Gemini API access
 
+### Clone the repository
+
+```sh
+git clone https://github.com/anmolsinghgarg80/AI-Chat-interface.git
+cd AI-Chat-interface
+```
+
 ### Backend Setup
 
 1. Navigate to the backend directory:
@@ -68,7 +75,7 @@ GEMINI_API_KEY=your_gemini_api_key
 5. Start the backend server:
 
 ```sh
-python -m -app.main
+python -m app.main
 ```
 
 ### Frontend Setup
@@ -115,7 +122,7 @@ The application will be available at http://localhost:5173
 - View conversation history in the sidebar
 - Switch between different conversations
 
-### API Documentation
+## API Documentation
 
 #### Chat with AI
 
@@ -209,3 +216,114 @@ Create a new conversation.
   }
 }
 ```
+
+## Deployment Guide
+
+Frontend is deployed on render and the Backend on Google Cloud using App Engine.
+
+### Frontend Deployement
+
+#### Step 1: Prepare Your React App
+
+1. Navigate to Frontend
+
+```sh
+cd frontend
+```
+
+2. Build the app
+
+```sh
+npm run build
+```
+
+3. Initialize a Git Repository
+
+```sh
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin <your-repository-url>
+git push -u origin main
+```
+
+#### Step 2: Create a New Web Service on Render
+
+1. Go to Render → https://dashboard.render.com/
+
+2. Click "New" → Select "Static Site".
+
+3. Connect your GitHub account and select your React app repository.
+
+#### Step 3: Configure Deployment Settings
+
+1. Name Your Project
+
+2. Select Branch (choose main)
+
+3. Root Directory -> frontend
+
+4. Build Commands -> frontend / npm install; npm run build
+
+5. Publish Directory -> frontend / dist
+
+6. Add the Environment Variables(same as in frontend .env file)
+
+7. Click Create Static Site to start deployment.
+
+### Backend Deployement
+
+#### 1. Set Up a Google Cloud Project
+
+1. Go to Google Cloud Console and create a new Project
+
+#### 2. Enable App Engine Admin API
+
+1. Search for "App Engine Admin API".
+
+2. Click Enable to activate it.
+
+#### 3. Create an App Engine
+
+1. Search "App Engine" and select it.
+
+2. Create Application and choose the deployment region nearest to you.
+
+3. Click Next and wait for the App Engine setup to complete.
+
+#### 4. Prepare Your Python Application
+
+Ensure you have
+
+- app/main.py -> contains backend service.
+- requirements.txt -> list of dependencies.
+- app.yaml -> configuration file for App Engine.
+
+#### 5. Deploy application
+
+1. Open Cloud Shell and run
+
+```sh
+gcloud init
+```
+
+2. Now Copy the folders and files in the open Editor
+
+3. run the following command
+
+```sh
+gcloud app deploy
+```
+
+4. Run the following command to view your app
+
+```sh
+gcloud app browse
+```
+
+#### Update frontend environment
+
+Get the App Engine Url and update the VITE_BASE_URL variable in .env file present in the Frontend environment on render.
+
+Following these Steps, both the frontend and backend will be deployed.
