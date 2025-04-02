@@ -50,6 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         })
       );
 
+      // Navigate to the chat page without parameter
       navigate("/chat");
     } catch (error: any) {
       console.error("Something went wrong:", error);
@@ -80,6 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         })
       );
 
+      // Navigate to the chat page without parameter
       navigate("/chat");
     } catch (error: any) {
       console.error("Something went Wrong:", error);
@@ -116,8 +118,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         })
       );
 
+      // Navigate to the chat page without parameter
       navigate("/chat");
-
     } catch (error: any) {
       console.error("Error:", error);
       throw error.message || "Google sign-in failed";

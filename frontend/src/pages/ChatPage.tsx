@@ -29,12 +29,14 @@ const Chat = () => {
 
   useEffect(() => {
     if (!user) return;
-    if (!conversationId) {
+
+    if (conversationId) {
+      fetchMessages();
+    } else {
+      // Clear messages when no conversationId is present
       setMessages([]);
-      return;
     }
-    fetchMessages();
-  }, [conversationId]);
+  }, [conversationId, user]);
 
   useEffect(() => {
     if (!user && !loading) {
@@ -103,6 +105,9 @@ const Chat = () => {
     }, 100);
   };
 
+  // Check if we have an actual conversationId (not empty string, undefined, or null)
+  const hasConversation = conversationId && conversationId.trim() !== "";
+
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
       <ChatSidebar currentConversationId={conversationId || null} />
@@ -118,15 +123,15 @@ const Chat = () => {
                 Loading conversation ...
               </div>
             </div>
-          ) : !conversationId ? (
+          ) : !hasConversation ? (
+            <EmptyChat />
+          ) : messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-indigo-600 flex items-center flex-col gap-3 bg-white p-6 rounded-xl shadow-sm">
                 <MessageSquare className="h-10 w-10 text-indigo-500" />
-                Add a new conversation in sidebar to continue
+                No messages in this conversation yet
               </div>
             </div>
-          ) : messages.length === 0 ? (
-            <EmptyChat />
           ) : (
             <>
               <div className="pb-20">
