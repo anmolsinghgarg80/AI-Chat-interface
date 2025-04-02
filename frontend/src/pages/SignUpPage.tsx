@@ -38,8 +38,8 @@ const AuthPage: React.FC = () => {
     try {
       await signUp(email, password);
       // If successful, the AuthContext will navigate to /chat
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error: any) {
+      setError(error);
     }
   };
 
@@ -48,8 +48,8 @@ const AuthPage: React.FC = () => {
     try {
       await signInWithGoogle();
       // If successful, the AuthContext will navigate to /chat
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error: any) {
+      setError(error);
     }
   };
 

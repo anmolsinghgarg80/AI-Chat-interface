@@ -51,8 +51,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
 
       navigate("/chat");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Something went wrong:", error);
+      throw error.message || "Failed to sign up";
     } finally {
       setLoading(false);
     }
@@ -80,8 +81,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
 
       navigate("/chat");
-    } catch (error) {
-      console.error("Something went Wrong :", error);
+    } catch (error: any) {
+      console.error("Something went Wrong:", error);
+      throw error.message || "Invalid email or password";
     } finally {
       setLoading(false);
     }
@@ -116,8 +118,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       navigate("/chat");
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error:", error);
+      throw error.message || "Google sign-in failed";
     } finally {
       setLoading(false);
     }
