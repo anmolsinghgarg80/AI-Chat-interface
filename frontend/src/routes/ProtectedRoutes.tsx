@@ -6,7 +6,20 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  // Get user from localStorage with better error handling
+  const getUserFromStorage = () => {
+    try {
+      const userData = localStorage.getItem("user");
+      if (!userData) return null;
+      const user = JSON.parse(userData);
+      return Object.keys(user).length > 0 ? user : null;
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      return null;
+    }
+  };
+
+  const user = getUserFromStorage();
   const { loading } = useAuth();
 
   if (loading) {

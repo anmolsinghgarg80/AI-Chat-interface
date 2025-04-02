@@ -1,7 +1,7 @@
 import ChatSidebar from "@/components/ChatSidebar";
 import ChatInput from "@/components/ChatInput";
 import { Message } from "@/types";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { getConversation, sendMessage } from "@/api/api";
 import ChatMessage from "@/components/ChatMessage";
@@ -14,13 +14,16 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const [isSendingMessage, setSendingMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const [user] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("user") || "{}");
+      const userData = localStorage.getItem("user");
+      if (!userData) return null;
+      return JSON.parse(userData);
     } catch (error) {
       console.error("Error parsing user from localStorage:", error);
-      return {};
+      return null;
     }
   });
 
@@ -32,6 +35,12 @@ const Chat = () => {
     }
     fetchMessages();
   }, [conversationId]);
+
+  useEffect(() => {
+    if (!user && !loading) {
+      navigate("/");
+    }
+  }, [user, loading]);
 
   const fetchMessages = async () => {
     if (!conversationId) return;
