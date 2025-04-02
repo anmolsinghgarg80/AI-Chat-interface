@@ -114,109 +114,6 @@ npm run dev
 
 The application will be available at http://localhost:5173
 
-### Usage
-
-- Sign up for a new account or sign in with Google
-- Create a new conversation from the sidebar
-- Start chatting with the AI
-- View conversation history in the sidebar
-- Switch between different conversations
-
-## API Documentation
-
-#### Chat with AI
-
-**POST** `/api/chat`  
-Send a message to the AI and receive a response.
-
-**Request Body:**
-
-```json
-{
-  "content": "Your message here",
-  "conversation_id": "existing_conversation_id_or_new"
-}
-```
-
-**Response:**
-
-```json
-{
-  "message_id": "unique_message_id",
-  "content": "AI response",
-  "conversation_id": "conversation_id"
-}
-```
-
-#### Get Conversations
-
-**GET** `/api/conversations`  
-Retrieve a list of all conversations for the authenticated user.
-
-**Response:**
-
-```json
-{
-  "conversations": [
-    {
-      "id": "conversation_id",
-      "title": "Conversation Title",
-      "createdAt": "timestamp",
-      "updatedAt": "timestamp"
-    }
-  ]
-}
-```
-
-#### Get Conversation Messages
-
-**GET** `/api/conversations/{conversation_id}`  
-Retrieve all messages in a specific conversation.
-
-**Response:**
-
-```json
-{
-  "id": "conversation_id",
-  "title": "Conversation Title",
-  "createdAt": "timestamp",
-  "messages": [
-    {
-      "id": "message_id",
-      "content": "Message content",
-      "role": "user_or_assistant",
-      "createdAt": "timestamp"
-    }
-  ]
-}
-```
-
-#### Create a New Conversation
-
-**POST** `/api/conversations`  
-Create a new conversation.
-
-**Request Body:**
-
-```json
-{
-  "title": "Conversation Title"
-}
-```
-
-**Response:**
-
-```json
-{
-  "conversation": {
-    "id": "conversation_id",
-    "title": "Conversation Title",
-    "createdAt": "timestamp",
-    "updatedAt": "timestamp"
-  }
-}
-```
-
 ## Deployment Guide
 
 Frontend is deployed on render and the Backend on Google Cloud using App Engine.
@@ -322,8 +219,103 @@ gcloud app deploy
 gcloud app browse
 ```
 
-#### Update frontend environment
+#### 6. Update frontend environment
 
-Get the App Engine Url and update the VITE_BASE_URL variable in .env file present in the Frontend environment on render.
+1. Get the App Engine Url and update the VITE_BASE_URL variable in .env file present in the Frontend environment on render.
 
 Following these Steps, both the frontend and backend will be deployed.
+
+## API Documentation
+
+#### Chat with AI
+
+**POST** `/api/chat`  
+Send a message to the AI and receive a response.
+
+**Request Body:**
+
+```json
+{
+  "content": "Your message here",
+  "conversation_id": "existing_conversation_id_or_new"
+}
+```
+
+**Response:**
+
+```json
+{
+  "message_id": "unique_message_id",
+  "content": "AI response",
+  "conversation_id": "conversation_id"
+}
+```
+
+#### Get Conversations
+
+**GET** `/api/conversations`  
+Retrieve a list of all conversations for the authenticated user.
+
+**Response:**
+
+```json
+{
+  "conversations": [
+    {
+      "id": "conversation_id",
+      "title": "Conversation Title",
+      "createdAt": "timestamp",
+      "updatedAt": "timestamp"
+    }
+  ]
+}
+```
+
+#### Get Conversation Messages
+
+**GET** `/api/conversations/{conversation_id}`  
+Retrieve all messages in a specific conversation.
+
+**Response:**
+
+```json
+{
+  "id": "conversation_id",
+  "title": "Conversation Title",
+  "createdAt": "timestamp",
+  "messages": [
+    {
+      "id": "message_id",
+      "content": "Message content",
+      "role": "user_or_assistant",
+      "createdAt": "timestamp"
+    }
+  ]
+}
+```
+
+#### Create a New Conversation
+
+**POST** `/api/conversations`  
+Create a new conversation.
+
+**Request Body:**
+
+```json
+{
+  "title": "Conversation Title"
+}
+```
+
+**Response:**
+
+```json
+{
+  "conversation": {
+    "id": "conversation_id",
+    "title": "Conversation Title",
+    "createdAt": "timestamp",
+    "updatedAt": "timestamp"
+  }
+}
+```
